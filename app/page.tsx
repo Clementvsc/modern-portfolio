@@ -1,70 +1,47 @@
-'use client';
-import React, { useEffect, useState, useRef } from 'react';
-import Link from 'next/link';
-import { AnimatePresence, motion } from 'framer-motion';
+'use client'
+import React, { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { Player } from "@lottiefiles/react-lottie-player";
+import cloudLottie from './cloud-lottie.json';
 
-const bgVideo = "https://cdn.coverr.co/videos/coverr-cloudscape-1699459221084?token=eyJhbGciOiJIUzI1NiJ9"; // Fast, modern, works everywhere
-const bgFallback = "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=1200&q=80";
-
-const logoLight = "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg";
-const logoDark = "https://img.icons8.com/external-flatart-icons-outline-flatarticons/64/000000/external-cloud-network-internet-flatart-icons-outline-flatarticons-1.png";
-
-const certifications = [
-  { name: "PG Certificate: Cloud Computing", issuer: "Humber College", date: "2025" },
-  { name: "PG Certificate: Cybersecurity & Threat Management", issuer: "Humber College", date: "2025" }
+// --- Data ---
+const socialLinks = [
+  { name: "GitHub", icon: "https://www.svgrepo.com/show/303615/github-icon-1-logo.svg", url: "https://github.com/Clementvsc" },
+  { name: "LinkedIn", icon: "https://upload.wikimedia.org/wikipedia/commons/8/81/LinkedIn_icon.svg", url: "https://www.linkedin.com/in/sahaya-clement/" }
 ];
-const education = {
-  school: "Humber College", degree: "Postgraduate Certificates",
-  location: "Toronto, ON", year: "2025"
-};
+const projects = [
+  { title: "Rain Game", desc: "Fun animated browser game.", type: "Lab", url: "https://codepen.io/Yasio/full/vYYNWxB", tags: ["Canvas", "Game"], image: "https://codepen.io/Yasio/full/vYYNWxB/image/large.jpg", video: "", featured:true },
+  { title: "FaceDetect Mask App", desc: "Real-time face detection + mask overlay.", type: "Lab", url: "https://codepen.io/Yasio/details/MPmvJb", tags: ["ML", "Browser"], image: "https://codepen.io/Yasio/details/MPmvJb/image/large.jpg", video: "", featured:true },
+  { title: "Cloud Compliance Dash", desc: "Realtime dashboards for AWS/Azure/GCP", type: "Web", url: "https://vercel.com/dashboard", tags: ["Next.js", "AWS"], image: "https://images.unsplash.com/photo-1520880867055-1e30d1cb001c?w=600", video: "https://www.w3schools.com/html/mov_bbb.mp4", featured: true},
+  { title: "Mobile SOC Monitor", desc: "CyberSOC metrics at your fingertips.", type: "Mobile", url: "https://expo.dev/@clementvsc/soc-monitor", tags: ["Flutter", "Firebase"], image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=600", video: "", featured: true },
+  { title: "ThreatML Playground", desc: "ML-powered threat detection demo.", type: "Lab", url: "https://github.com/Clementvsc/threatml", tags: ["Python", "Scikit-Learn"], image: "https://images.unsplash.com/photo-1465101178521-c1a9136a3b41?w=600", video: "" },
+];
+
+const labs = [
+  { title: "Rain Game", emoji: "🌧️", url: "https://codepen.io/Yasio/full/vYYNWxB" },
+  { title: "Coding Hero", emoji: "🦸‍♂️", url: "https://codepen.io/Yasio/details/eXBRYP" },
+  { title: "FaceDetect Mask App", emoji: "🤳", url: "https://codepen.io/Yasio/details/MPmvJb" },
+];
+
+const timeline = [
+  { year: "2025", label: "Graduated (Cloud, Cybersecurity)", icon: "🎓" },
+  { year: "2024", label: "Built Modern Portfolio", icon: "💻" },
+  { year: "2022-2023", label: "PG Certifications, Projects", icon: "📜" }
+];
+const certifications = [
+  { label: "Cloud Computing (PG Cert)", by: "Humber College" },
+  { label: "Cybersecurity & Threat Mgmt (PG Cert)", by: "Humber College" }
+];
 const skills = [
-  { name: "AWS", level: 92 }, { name: "Azure", level: 80 }, { name: "Terraform", level: 95 }, { name: "Kubernetes", level: 85 },
-  { name: "Python", level: 88 }, { name: "TypeScript/JS", level: 82 }, { name: "React/Next.js", level: 88 }, { name: "SIEM/Threat Detection", level: 80 }
+  "AWS", "Azure", "Terraform", "Kubernetes", "Python", "TypeScript", "React", "SIEM", "DevOps", "Next.js", "Tailwind", "Git"
 ];
 const testimonials = [
-  { quote: "Clement is a quick learner with strong DevOps skills.", name: "Dr. John Smith", title: "Professor, Humber College" },
-  { quote: "Highly recommended for automation and cloud projects!", name: "Rachel Adams", title: "Mentor" },
-  { quote: "Excellent to work with, always delivers quality!", name: "Alex P.", title: "Team Lead" }
-];
-const socialLinks = [
-  { name: "LinkedIn", icon: "https://upload.wikimedia.org/wikipedia/commons/8/81/LinkedIn_icon.svg", url: "https://www.linkedin.com/in/sahaya-clement/" },
-  { name: "GitHub", icon: "https://www.svgrepo.com/show/303615/github-icon-1-logo.svg", url: "https://github.com/Clementvsc" }
-];
-const timeline = [
-  {year: "1925", tech: "Mainframes"}, {year: "1965", tech: "Minicomputers"},
-  {year: "1985", tech: "PC Revolution"}, {year: "2005", tech: "Cloud Era"}, {year: "2025", tech: "LLMs & Quantum"}
-];
-const techCloud = ["AWS","Azure","GCP","Linux","Docker","Kubernetes","Python","TypeScript"];
-const blogs = [
-  { title: "Automating Cloud Infrastructure", url: "https://dev.to/yourusername/terraform-automation", date: "2024-09-01" },
-  { title: "Incident Response: Securing Apps", url: "https://gist.github.com/Clementvsc", date: "2024-08-12" }
+  { quote: "Clement is a fast learner with outstanding IT skills.", name: "Dr. John Smith" },
+  { quote: "Brought our cloud project to life—thoroughly recommend!", name: "Rachel Adams" }
 ];
 
-const fetchRepos = async () => {
-  const res = await fetch("https://api.github.com/users/Clementvsc/repos?per_page=100&sort=updated", { cache: "no-store" });
-  if (!res.ok) throw new Error("Failed to load repositories");
-  const data = await res.json();
-  return data.filter(x => !x.archived).map(
-    r => ({ id: r.id, name: r.name, description: r.description ?? "No description provided.", url: r.html_url, homepage: r.homepage ?? "", language: r.language ?? "", updated: r.updated_at })
-  );
-};
-
-function useContactForm() {
-  const [status, setStatus] = useState("idle");
-  const [msg, setMsg] = useState("");
-  async function handleSubmit(e: any) {
-    e.preventDefault();
-    setStatus("loading");
-    const fd = new FormData(e.target);
-    try {
-      await fetch("https://formspree.io/f/xyyqvkdg", { method: "POST", body: fd, headers: { Accept: "application/json" } });
-      setStatus("sent"); setMsg("Thanks for reaching out!");
-    } catch { setStatus("error"); setMsg("Error sending message."); }
-  }
-  return { status, msg, handleSubmit };
-}
-
-function useAutoCarousel(length: number, delay=4000): [number, React.Dispatch<React.SetStateAction<number>>] {
+// --- Featured project carousel ---
+function useAutoCarousel(length: number, delay=5200): [number, React.Dispatch<React.SetStateAction<number>>] {
   const [idx, setIdx] = useState(0);
   useEffect(() => {
     if (length < 2) return;
@@ -74,216 +51,255 @@ function useAutoCarousel(length: number, delay=4000): [number, React.Dispatch<Re
   return [idx, setIdx];
 }
 
-// --- Project Showcase NEW Animated Carousel ---
-function ProjectShowcase({ repos, dark }: { repos: any[]; dark: boolean }) {
-  const [current, setCurrent] = useState(0);
-  const [dragStartX, setDragStartX] = useState<number|null>(null);
-
-  function goto(idx: number) { setCurrent((idx+repos.length)%repos.length); }
-  function handleSwipe(e: React.TouchEvent) {
-    if (!dragStartX) return;
-    const dx = e.changedTouches[0].clientX - dragStartX;
-    if (dx > 70) goto(current-1);
-    if (dx < -70) goto(current+1);
-    setDragStartX(null);
-  }
-  if (repos.length === 0) return <div className="text-blue-700 dark:text-blue-200 text-center">No projects found!</div>;
-
-  let prevIdx = (current-1+repos.length)%repos.length;
-  let nextIdx = (current+1)%repos.length;
+function FeaturedProjectCarousel({ projects }: { projects: any[] }) {
+  const featured = projects.filter(p=>p.featured);
+  const [idx, setIdx] = useAutoCarousel(featured.length, 4200);
+  if (!featured.length) return null;
+  const current = featured[idx % featured.length];
   return (
-    <div className="relative flex justify-center items-center w-full max-w-full px-2 select-none"
-      onTouchStart={e=>setDragStartX(e.touches[0].clientX)}
-      onTouchEnd={handleSwipe}
-    >
-      {/* Arrow Left */}
-      <button aria-label="Previous" onClick={()=>goto(current-1)}
-        className="absolute left-1 top-1/2 -translate-y-1/2 z-30 bg-indigo-50 dark:bg-zinc-800 border border-indigo-200 dark:border-violet-800 text-indigo-800 dark:text-blue-100 font-extrabold shadow px-4 py-3 rounded-full opacity-90 hover:bg-violet-100 dark:hover:bg-violet-900 transition text-2xl">
-        ‹
-      </button>
-      {/* Three card stack */}
-      <div className="relative flex w-full max-w-3xl h-[320px]">
-        <motion.div
-          key={repos[prevIdx]?.id}
-          style={{ left: 0 }}
-          className="absolute w-[70%] h-[88%] -translate-y-1/2 top-1/2 left-0 pointer-events-none opacity-40"
-          animate={{ x: -85, scale: .92, filter: "blur(3px)", y: '-50%' }}
-          transition={{ duration: 0.44, type: "tween" }}>
-          <ProjectCard project={repos[prevIdx]} active={false} />
-        </motion.div>
-        <motion.div
-          key={repos[current]?.id}
-          style={{ left: "50%" }}
-          className="absolute w-[73%] h-full -translate-x-1/2 z-10 cursor-pointer"
-          animate={{ x: 0, scale: 1.09, boxShadow: "0 12px 50px #c7d2fe66" }}
-          transition={{ type: "spring", stiffness: 210, damping: 20 }}>
-          <ProjectCard project={repos[current]} active={true} />
-        </motion.div>
-        <motion.div
-          key={repos[nextIdx]?.id}
-          style={{ right: 0 }}
-          className="absolute w-[70%] h-[88%] -translate-y-1/2 top-1/2 right-0 pointer-events-none opacity-40"
-          animate={{ x: 85, scale: .92, filter: "blur(3px)", y: '-50%' }}
-          transition={{ duration: 0.44, type: "tween" }}>
-          <ProjectCard project={repos[nextIdx]} active={false} />
-        </motion.div>
+    <div className="mb-7 relative group rounded-2xl overflow-hidden shadow-xl border-2 border-violet-700">
+      {current.video
+        ? <video src={current.video} autoPlay loop muted playsInline className="w-full h-60 object-cover" />
+        : <img src={current.image} className="w-full h-60 object-cover" alt={current.title} />
+      }
+      <div className="absolute left-0 right-0 bottom-0 px-7 py-4 bg-zinc-900/70 flex flex-col">
+        <div className="text-lg font-bold text-violet-100">{current.title}</div>
+        <div className="text-xs text-violet-400">{current.tags?.map((t:string)=>"#"+t).join(" ")}</div>
+        <div className="text-sm text-zinc-200 mt-1">{current.desc}</div>
+        <div className="flex gap-3 mt-2">
+          <a href={current.url} target="_blank" className="text-xs px-3 py-1 bg-violet-600 rounded shadow font-bold text-white hover:bg-violet-700 transition">Live Demo</a>
+        </div>
       </div>
-      {/* Arrow Right */}
-      <button aria-label="Next" onClick={()=>goto(current+1)}
-        className="absolute right-1 top-1/2 -translate-y-1/2 z-30 bg-indigo-50 dark:bg-zinc-800 border border-indigo-200 dark:border-violet-800 text-indigo-800 dark:text-blue-100 font-extrabold shadow px-4 py-3 rounded-full opacity-90 hover:bg-violet-100 dark:hover:bg-violet-900 transition text-2xl">
-        ›
-      </button>
+      <button className="absolute left-1 top-1/2 bg-zinc-900/80 px-2 py-2 text-2xl rounded-full -translate-y-1/2 hover:bg-violet-800" onClick={()=>setIdx((i)=>(i-1+featured.length)%featured.length)}>‹</button>
+      <button className="absolute right-1 top-1/2 bg-zinc-900/80 px-2 py-2 text-2xl rounded-full -translate-y-1/2 hover:bg-violet-800" onClick={()=>setIdx((i)=>(i+1)%featured.length)}>›</button>
+      <div className="absolute right-9 bottom-3 flex gap-1">
+        {featured.map((_,i) => <span key={i} className={`inline-block w-2 h-2 rounded-full ${i===idx?"bg-violet-200":"bg-zinc-700"}`} />)}
+      </div>
     </div>
   );
 }
 
-function ProjectCard({ project, active }: { project: any; active: boolean }) {
-  const [expanded, setExpanded] = useState(false);
+function ProjectPopup({ project, onClose }: { project: any, onClose: () => void }) {
   return (
-    <motion.div
-      whileHover={active ? { scale: 1.07, boxShadow: '0 8px 60px #504ba9c5' } : { scale: 1 }}
-      className={`rounded-2xl border shadow-xl p-6 bg-white/95 dark:bg-zinc-900/90
-        flex flex-col items-center text-center transition cursor-pointer
-        ${active ? "border-violet-400 dark:border-blue-500 z-30" : "border-zinc-300 dark:border-zinc-700"}`}
-      style={{ minHeight: expanded && active ? 310 : 210 }}
-      onClick={() => active && setExpanded(v => !v)}
-    >
-      <h3 className="text-lg font-bold mb-2 text-violet-800 dark:text-blue-100">{project.name}</h3>
-      <p className="text-sm mb-3 text-gray-800 dark:text-zinc-200">{project.description}</p>
-      {expanded && active &&
-        <div className="border-t pt-3 my-2 w-full">
-          <div className="text-xs text-blue-700 dark:text-blue-300 mb-2">
-            {project.language && <span>{project.language}</span>}<br/>
-            <span>Last updated: {project.updated.slice(0, 10)}</span>
-          </div>
-          <a className="font-bold underline text-indigo-700 dark:text-blue-300 hover:text-violet-700 mr-3" href={project.url} target="_blank" rel="noopener">GitHub</a>
-          {project.homepage && (
-            <a className="font-bold underline text-green-700 dark:text-green-300 hover:text-green-900" href={project.homepage} target="_blank" rel="noopener">Live Demo</a>
-          )}
-        </div>
-      }
-      {!expanded && active && <div className="text-xs text-indigo-900 dark:text-blue-400 mt-2">(Click card for more)</div>}
+    <motion.div className="fixed inset-0 bg-black/70 flex z-50 items-center justify-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+      <motion.div className="bg-zinc-950 border-2 border-violet-700 max-w-lg w-[97vw] rounded-2xl p-8 shadow-2xl relative text-zinc-100"
+        initial={{ scale: .9, y: -60, opacity: 0 }} animate={{ scale: 1, y: 0, opacity: 1 }} exit={{ scale: .95, y: 60, opacity: 0 }}>
+        <button className="absolute top-3 right-5 text-violet-400 hover:text-yellow-200 text-3xl font-bold" onClick={onClose}>×</button>
+        <div className="font-bold text-2xl mb-1">{project?.title}</div>
+        <div className="flex gap-2 flex-wrap text-xs text-violet-300 mb-2 font-mono">{project?.tags?.map((t: string, idx: number) => <span key={idx}>#{t}</span>)}</div>
+        {project.video ? <video src={project.video} controls className="w-full h-48 rounded-xl mb-3 object-cover" /> : <img src={project.image} alt="" className="w-full rounded-xl mb-3 object-cover" />}
+        <div className="mb-4 text-zinc-100">{project?.desc}</div>
+        <a href={project?.url} className="text-violet-200 font-bold hover:underline" target="_blank">View Live Demo</a>
+      </motion.div>
     </motion.div>
   );
 }
 
-export default function HomePage() {
-  const [repos, setRepos] = useState<any[]>([]);
-  const [loadingRepos, setLoadingRepos] = useState(false);
-  const [dark, setDark] = useState(false);
-  const contact = useContactForm();
-  const [testiIdx, setTestiIdx] = useAutoCarousel(testimonials.length);
+function SVGBackground() {
+  return (
+    <svg className="fixed inset-0 z-0 w-full h-full pointer-events-none" viewBox="0 0 1440 850" fill="none" style={{ opacity: .41 }}>
+      <path fill="url(#a)" fillOpacity=".8"
+        d="M0,720 Q360,650 720,900 Q1080,1150 1440,800 V0 H0 Z" />
+      <defs>
+        <linearGradient id="a" x1="0" y1="0" x2="900" y2="900" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#6366F1" />
+          <stop offset="1" stopColor="#8b5cf6" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+}
 
-  // Video autoplay fallback
-  const [videoOk, setVideoOk] = useState(true);
+export default function Page() {
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const [modal, setModal] = useState<null | number>(null);
+  const [filter, setFilter] = useState<null | string>(null);
+  const [testiIdx, setTestiIdx] = useAutoCarousel(testimonials.length);
+  const [aboutOpen, setAboutOpen] = useState(false);
 
   useEffect(() => {
-    setLoadingRepos(true);
-    fetchRepos().then(setRepos).catch(() => setRepos([])).finally(() => setLoadingRepos(false));
-    if (typeof window !== "undefined") {
-      const root = document.documentElement;
-      if (dark) root.classList.add("dark");
-      else root.classList.remove("dark");
-      document.body.style.background = dark
-        ? "radial-gradient(ellipse at 55% 30%, #191b27 52%, #151622 87%)"
-        : "radial-gradient(ellipse at 60% 40%, #7fa2eb1a 80%, #fff0 )";
-    }
-  }, [dark]);
+    if (theme === "dark") document.documentElement.classList.add('dark');
+    else document.documentElement.classList.remove('dark');
+    document.body.style.background = theme === "dark"
+      ? "radial-gradient(ellipse at 60% 30%, #191b27 65%, #151622 95%)"
+      : "radial-gradient(ellipse at 40% 50%, #dbeafe 78%, #fff0 100%)";
+  }, [theme]);
+  const filtered = filter ? projects.filter(p => p.type === filter) : projects;
+  const contact = useContactForm();
+  const heroType = ["Cloud Engineer", "Security Specialist", "Fullstack Dev", "SIEM Enthusiast", "Open to New Opportunities"][testiIdx % 5];
 
   return (
-    <div className={`relative min-h-screen overflow-x-hidden font-sans`}>
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        {videoOk ? (
-          <video className="w-full h-full object-cover" src={bgVideo}
-            autoPlay muted loop playsInline preload="auto"
-            style={{opacity:0.42, background:'#181D20'}}
-            onError={()=>setVideoOk(false)}
-          />
-        ) : (
-          <img src={bgFallback} alt="" className="w-full h-full object-cover opacity-40" />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-zinc-900 to-zinc-950 opacity-90" />
-      </div>
-      {/* NAVBAR */}
-      <nav className="sticky top-0 z-30 w-full flex justify-center py-5 mb-8"
-        style={{
-          background: dark ? "rgba(24,24,30,.92)" : "rgba(30,41,59,0.85)",
-          backdropFilter: "blur(22px)", WebkitBackdropFilter: "blur(22px)"
-        }}>
-        <div className="w-[98vw] max-w-[1600px] flex justify-between items-center px-8">
-          <div className="flex items-center gap-5">
-            <img src={dark ? logoDark : logoLight} alt="Logo"
-              className="w-14 h-14 rounded-full border-2 border-indigo-200 dark:border-blue-300 shadow-lg bg-white/80" />
-            <Link href="/" className="text-2xl sm:text-3xl font-black tracking-tight text-white drop-shadow-lg">Clement Modern Portfolio</Link>
-          </div>
-          <div className="flex gap-7 items-center">
-            {socialLinks.map(({ name, icon, url }) => (
-              <a key={name} href={url} target="_blank" rel="noreferrer">
-                <img src={icon} alt={name} className="w-8 h-8 bg-white/40 dark:bg-zinc-700 rounded-xl p-1 shadow hover:scale-110 transition" />
-              </a>
-            ))}
-            <button
-              onClick={() => setDark(d => !d)}
-              className={`ml-7 border-2 rounded-full px-7 py-2 text-xl font-black shadow-lg transition 
-                ${dark
-                  ? 'bg-[radial-gradient(circle_at_top_left,_var(--tw-gradient-stops))] from-[#313f72] to-[#8e55e4] border-blue-400 text-yellow-300'
-                  : 'bg-gradient-to-r from-indigo-400 via-blue-300 to-violet-200 border-indigo-700 text-indigo-900'
-                }
-                ring-1 ring-violet-300 dark:ring-violet-700 hover:scale-110`}
-              aria-label="Toggle light/dark theme"
-            >{dark ? "☀️" : "🌙"}</button>
+    <div className="min-h-screen flex flex-row bg-zinc-950 dark:bg-zinc-950 text-zinc-100 overflow-x-hidden font-mono">
+      <SVGBackground />
+      {/* ---- SIDEBAR ---- */}
+      <aside className="hidden md:flex w-[265px] sticky top-0 min-h-screen flex-col z-40 border-r bg-zinc-900/90 border-zinc-800 py-8 gap-8">
+        <div className="flex gap-3 items-center px-6 mb-4">
+          <div className="w-12 h-12"><Player autoplay loop src={cloudLottie} style={{height:"48px", width:"48px"}}/></div>
+          <div>
+            <div className="font-bold leading-none text-violet-400 text-lg">Clement</div>
+            <div className="text-xs text-zinc-400 tracking-tight">Cloud & Security Engineer</div>
           </div>
         </div>
-      </nav>
-      <main className="relative z-10">
-        {/* --- all prior animated sections --- */}
-        {/* ...Hero, Badges, Timeline, Certifications, Education, Skills... */}
-
-        {/* Projects: Improved carousel */}
-        <section className="max-w-5xl mx-auto my-16 px-2">
-          <h2 className="text-3xl text-center font-bold mb-8 text-violet-800 dark:text-blue-100">Projects Showcase</h2>
-          {loadingRepos
-            ? <div className="text-center text-blue-700 dark:text-blue-300">Loading projects…</div>
-            : <ProjectShowcase repos={repos} dark={dark} />}
-        </section>
-        {/* --- Rest of your sections ... Testimonials, Blogs, Contact, etc. remain unchanged and as above --- */}
-        <motion.section className="max-w-5xl mx-auto my-12" initial={{y:40,opacity:0}} whileInView={{y:0,opacity:1}} viewport={{ once: true }}>
-          <h2 className="text-2xl font-bold mb-4 text-indigo-900 dark:text-zinc-100">Testimonials</h2>
-          <div className="flex flex-col items-center">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={testimonials[testiIdx]?.name}
-                initial={{opacity:0,x:40}}
-                animate={{opacity:1,x:0}}
-                exit={{opacity:0,x:-40}}
-                transition={{duration:0.65}}
-                className="bg-white/95 dark:bg-zinc-900/90 border p-6 rounded-xl shadow-xl max-w-xl text-center"
-              >
-                <p className="italic text-zinc-900 dark:text-white mb-2">“{testimonials[testiIdx]?.quote}”</p>
-                <div className="mt-2 font-semibold text-indigo-700 dark:text-blue-200">{testimonials[testiIdx]?.name}</div>
-                <div className="text-xs text-indigo-500 dark:text-blue-400">{testimonials[testiIdx]?.title}</div>
-              </motion.div>
-            </AnimatePresence>
-            <div className="flex gap-4 mt-4">
-              {testimonials.map((t, i) => (
-                <button key={t.name}
-                  className={`w-3 h-3 rounded-full border-2 bg-white/90 dark:bg-zinc-800 border-violet-400 ${testiIdx===i?'ring-2 ring-violet-600':''}`}
-                  onClick={() => setTestiIdx(i)}
-                />
-              ))}
+        <nav className="flex flex-col gap-2 text-base px-6">
+          <a href="#work" className="hover:text-violet-300 font-semibold">WORK</a>
+          <a href="#lab" className="hover:text-blue-300 font-semibold">LAB</a>
+          <a href="#about" className="hover:text-green-200 font-semibold">ABOUT</a>
+          <a href="#contact" className="hover:text-yellow-200 font-semibold">CONTACT</a>
+        </nav>
+        <div className="flex gap-4 px-6 mt-auto items-center">
+          {socialLinks.map(s =>
+            <a key={s.name} href={s.url} target="_blank" rel="noopener">
+              <img src={s.icon} alt={s.name} className="w-7 h-7 bg-zinc-800 border border-zinc-700 p-1 rounded-full" />
+            </a>
+          )}
+          <motion.button aria-label="Toggle theme"
+            onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
+            className={`ml-auto px-2 py-1 rounded-full border border-zinc-700 shadow-lg text-2xl transition-colors ${theme === 'dark' ? 'bg-yellow-400/10 text-yellow-200 ring-yellow-200' : 'bg-indigo-200/20 text-indigo-900 ring-indigo-200'}`}
+            whileTap={{ scale: 0.9, rotate: theme === "dark" ? 6 : -6 }}
+          >
+            {theme === 'dark' ? "☀️" : "🌙"}
+          </motion.button>
+        </div>
+      </aside>
+      {/* -------- Main Content Panel -------- */}
+      <main className="flex-1 flex flex-col min-h-screen relative z-10">
+        {/* HERO */}
+        <motion.section id="hero" initial={{ y: 70, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: .8, type: "spring" }} className="pt-11 pb-16 px-5 md:px-20 min-h-[330px] md:min-h-[380px]">
+          <div className="max-w-2xl">
+            <h1 className="text-5xl font-black mb-2 tracking-tight">Sahaya Clement Vincent Martin</h1>
+            <div className="text-2xl mb-3 text-violet-200 min-h-[2.5em]">{heroType}</div>
+            <motion.p className="mt-1 text-base text-zinc-200 max-w-lg"
+              initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} transition={{delay:.45}}>Young <b>Cloud/Security/DevOps architect</b> with a passion for automation, SIEM, and modern fullstack projects. <span className="hidden md:inline">Looking for my first IT job—let’s connect!</span></motion.p>
+            <div className="flex gap-5 mt-7">
+              <a href="#contact" className="rounded-xl px-7 py-3 text-white font-bold bg-gradient-to-r from-indigo-500 to-violet-600 shadow border-2 border-indigo-400 hover:scale-105 transition">Contact Me</a>
+              <a href="/resume.pdf" download className="rounded-xl px-7 py-3 text-indigo-900 bg-white/90 font-bold border border-indigo-200 hover:bg-violet-100 shadow hover:scale-105 transition">Download CV</a>
             </div>
           </div>
         </motion.section>
-        {/* ... Blogs/Contact/Footer as previously shown ... */}
+
+        {/* --- FEATURED CAROUSEL + GRID --- */}
+        <motion.section id="work" initial={{ y: 70, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} transition={{ duration: .9, type: "spring" }} className="w-full mb-8 px-5 md:px-20">
+          <h2 className="text-2xl font-bold text-violet-300 mb-3">WORK</h2>
+          <FeaturedProjectCarousel projects={projects} />
+          <div className="flex mb-2 gap-6 items-center">
+            <div className="font-semibold text-sm text-zinc-300">All projects</div>
+            <div className="flex gap-2">
+              <button onClick={() => setFilter(null)} className={`px-3 py-1 rounded text-xs font-bold border transition ${!filter ? "bg-violet-900 border-violet-600 text-white" : "border-zinc-700 text-violet-200 bg-zinc-950 hover:bg-violet-900"}`}>All</button>
+              {Array.from(new Set(projects.map(p => p.type))).map(type =>
+                <button key={type} onClick={() => setFilter(type)} className={`px-3 py-1 rounded text-xs font-bold border transition ${filter === type ? "bg-violet-900 border-violet-600 text-white" : "border-zinc-700 text-violet-200 bg-zinc-950 hover:bg-violet-900"}`}>{type}</button>
+              )}
+            </div>
+          </div>
+          <div className="grid md:grid-cols-3 gap-7">
+            {filtered.map((proj, i) =>
+              <motion.div key={i}
+                whileHover={{ scale: 1.08, boxShadow: "0 5px 64px #6366f199" }}
+                className="bg-zinc-900/90 border border-violet-800 hover:border-violet-400 rounded-2xl transition overflow-hidden cursor-pointer shadow-xl flex flex-col"
+                onClick={() => setModal(i)}
+              >
+                <img src={proj.image} alt={proj.title} className="h-36 w-full object-cover" />
+                <div className="p-5 pb-3">
+                  <div className="text-xs text-violet-400 font-semibold mb-1">{proj.type}</div>
+                  <div className="font-bold text-lg mb-1">{proj.title}</div>
+                  <div className="text-sm text-zinc-300">{proj.desc}</div>
+                  <div className="mt-2 flex gap-2 flex-wrap text-[11px] uppercase font-extrabold text-violet-300">
+                    {proj.tags.map((t, ii) => <span key={ii}>#{t}</span>)}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </div>
+        </motion.section>
+        {/* Labs/minigames */}
+        <motion.section id="lab" initial={{ y: 70, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} transition={{ duration: .92, type: "spring" }} className="my-12 px-5 md:px-20">
+          <h2 className="text-2xl font-bold mb-4 text-blue-200">LAB</h2>
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-7">
+            {labs.map((lab, idx) =>
+              <a key={idx} href={lab.url} target="_blank"
+                className="group bg-blue-950/80 border border-blue-700 hover:border-blue-400 rounded-2xl p-6 flex gap-3 items-center transition font-mono text-blue-200 hover:bg-blue-900 hover:scale-105"
+              >
+                <span className="text-4xl">{lab.emoji}</span>
+                <span className="font-bold">{lab.title}</span>
+                <span className="text-xl ml-auto opacity-0 group-hover:opacity-100">➔</span>
+              </a>
+            )}
+          </div>
+        </motion.section>
+        {/* Roadmap/Timeline */}
+        <motion.section className="my-12 px-5 md:px-20" id="achievements" initial={{y:70,opacity:0}} whileInView={{y:0,opacity:1}} transition={{duration:1.1, type:"spring"}}>
+          <h2 className="text-2xl font-bold text-green-200 mb-5">Roadmap</h2>
+          <div className="flex flex-col gap-5 border-l-4 border-green-300 pl-9">{timeline.map((item,i)=>
+            <div key={i} className="relative">
+              <span className="absolute -left-8 top-0 text-3xl">{item.icon}</span>
+              <span className="font-bold text-green-200">{item.year}</span>
+              <span className="ml-4 text-zinc-100">{item.label}</span>
+            </div>
+          )}
+          </div>
+        </motion.section>
+        {/* About/Skills */}
+        <motion.section id="about" className="my-12 px-5 md:px-20" initial={{y:70,opacity:0}} whileInView={{y:0,opacity:1}} transition={{duration:1.2, type:"spring"}}>
+          <h2 className="text-2xl font-bold mb-4 text-yellow-300">About Me</h2>
+          <pre className={`bg-zinc-900/85 border border-yellow-300 rounded-xl p-6 font-mono text-xs text-yellow-200 overflow-x-auto transition-all duration-300 ${aboutOpen ? "max-h-[600px]" : "max-h-24 overflow-hidden"}`}>
+{`class Clement {
+  name = "Sahaya Clement Vincent Martin";
+  location = "Toronto, ON";
+  email = "clementvsc.martin@gmail.com";
+  certifications = ${JSON.stringify(certifications.map(c => c.label))}
+  skills = ${JSON.stringify(skills)};
+  github = "github.com/Clementvsc";
+  linkedin = "linkedin.com/in/sahaya-clement";
+}`}
+          </pre>
+          <button className="absolute right-6 top-3 text-yellow-400/80 text-sm" onClick={()=>setAboutOpen(o=>!o)}>
+            {aboutOpen ? "Collapse" : "Expand"}
+          </button>
+          <div className="flex flex-wrap mt-6 gap-2">
+            {skills.map(skill =>
+              <span key={skill} className="px-3 py-1 bg-gradient-to-r from-indigo-900/70 to-violet-950/90 text-violet-100 border border-violet-600 rounded-full text-xs font-semibold shadow cursor-pointer hover:scale-110 transition">
+                {skill}
+              </span>
+            )}
+          </div>
+        </motion.section>
+        {/* Testimonials Carousel */}
+        <motion.section className="my-10 max-w-2xl mx-auto px-5" initial={{y:70,opacity:0}} whileInView={{y:0,opacity:1}} transition={{duration:1.22, type:"spring"}}>
+          <h2 className="text-2xl font-bold mb-4 text-violet-200">Testimonials</h2>
+          <AnimatePresence mode="wait">
+            <motion.div key={testimonials[testiIdx]?.name} className="rounded-xl border border-violet-800 bg-zinc-900/80 p-5 shadow text-violet-100"
+              initial={{opacity:0, y:32}} animate={{opacity:1, y:0}} exit={{opacity:0, y:-32}} transition={{duration:.7}}>
+              <div className="font-mono text-base mb-1">“{testimonials[testiIdx]?.quote}”</div>
+              <div className="font-semibold text-xs text-right text-violet-400">– {testimonials[testiIdx]?.name}</div>
+            </motion.div>
+          </AnimatePresence>
+          <div className="flex gap-2 mt-2 items-center justify-center">
+            {testimonials.map((t,i)=>
+              <button key={i} onClick={()=>setTestiIdx(i)}
+                className={`w-3 h-3 rounded-full border-2 ${testiIdx===i?'bg-violet-400':'bg-zinc-700'} border-violet-400`} />
+            )}
+          </div>
+        </motion.section>
+        {/* Contact */}
+        <motion.section id="contact" className="my-10 max-w-lg mx-auto px-5" initial={{y:70,opacity:0}} whileInView={{y:0,opacity:1}} transition={{duration:1.23, type:"spring"}}>
+          <h2 className="text-2xl font-bold mb-4 text-yellow-200">Contact</h2>
+          <form className="flex flex-col gap-3 p-6 rounded-xl bg-white/95 dark:bg-zinc-900/90 border border-yellow-300 shadow-lg"
+                onSubmit={contact.handleSubmit}>
+            <input name="name" required placeholder="Your Name" className="rounded-xl p-2 bg-white/95 dark:bg-zinc-800 text-black dark:text-zinc-200" />
+            <input type="email" name="email" required placeholder="Your Email" className="rounded-xl p-2 bg-white/95 dark:bg-zinc-800 text-black dark:text-zinc-200" />
+            <textarea name="message" required placeholder="Your Message" className="rounded-xl p-2 bg-white/95 dark:bg-zinc-800 text-black dark:text-zinc-200" rows={3} />
+            <button className="bg-gradient-to-r from-yellow-400 to-violet-400 dark:from-zinc-700 dark:to-violet-900 rounded-xl px-6 py-2 text-white font-semibold hover:from-yellow-500 hover:to-violet-600 transition shadow" type="submit" disabled={contact.status === "loading"}>
+              {contact.status === "loading" ? "Sending..." : "Send"}
+            </button>
+            {contact.msg && (<div className="text-sm mt-2 text-yellow-800 dark:text-yellow-200">{contact.msg}</div>)}
+          </form>
+        </motion.section>
       </main>
-      <button onClick={() => window.scrollTo({top: 0, behavior: "smooth"})}
-        className="fixed right-8 bottom-8 z-50 bg-gradient-to-tr from-violet-700 to-indigo-800 text-white p-4 rounded-full shadow-lg backdrop-blur-lg border border-white/30 opacity-90 hover:scale-110 hover:opacity-100 transition"
-        aria-label="Back to top"
-      >↑</button>
-      <footer className="relative z-10 mx-auto mt-14 mb-4 max-w-4xl text-center p-8 rounded-xl bg-white/90 dark:bg-zinc-800/80 border border-white/20 dark:border-zinc-700 shadow text-lg text-blue-700 dark:text-blue-200 font-serif">
-        <span className="italic tracking-wide text-violet-500 block">A Century of Innovation.</span>
-        <br />&copy; {new Date().getFullYear()} Sahaya Clement Vincent Martin • Portfolio.
-      </footer>
+      {/* --- Project Modal --- */}
+      <AnimatePresence>
+        {modal !== null &&
+          <ProjectPopup project={projects[modal]!} onClose={()=>setModal(null)} />
+        }
+      </AnimatePresence>
     </div>
   );
 }

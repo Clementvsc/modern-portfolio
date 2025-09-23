@@ -1,9 +1,9 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
-// Data ---------
+// Data sets
 const certifications = [
   { name: "PG Certificate: Cloud Computing", issuer: "Humber College", date: "2025" },
   { name: "PG Certificate: Cybersecurity & Threat Management", issuer: "Humber College", date: "2025" }
@@ -29,8 +29,8 @@ const testimonials = [
   { quote: "Highly recommended for automation and cloud projects! Clement is collaborative and always delivers high-quality results.", name: "Rachel Adams", title: "Mentor" }
 ];
 const blogs = [
-  { title: "Automating Cloud Infrastructure with Terraform", url: "https://dev.to/yourusername/terraform-automation" },
-  { title: "Incident Response: Securing Modern Apps", url: "https://gist.github.com/Clementvsc" }
+  { title: "Automating Cloud Infrastructure with Terraform", url: "https://dev.to/yourusername/terraform-automation", date: "2024-09-01" },
+  { title: "Incident Response: Securing Modern Apps", url: "https://gist.github.com/Clementvsc", date: "2024-08-12" }
 ];
 const socialLinks = [
   { name: "LinkedIn", icon: "https://upload.wikimedia.org/wikipedia/commons/8/81/LinkedIn_icon.svg", url: "https://www.linkedin.com/in/sahaya-clement/" },
@@ -40,8 +40,6 @@ const socialLinks = [
   { name: "Stack Overflow", icon: "https://cdn.sanity.io/images/6v7bff5v/production/bfe91a273b3e904c78a7e2fdbf52b513.png", url: "https://stackoverflow.com/users/youruserid" },
   { name: "Twitter", icon: "https://cdn-icons-png.flaticon.com/512/733/733579.png", url: "https://twitter.com/yourusername" }
 ];
-
-// Tech timeline
 const timeline = [
   {year: "1925", tech: "Mainframes"},
   {year: "1965", tech: "Minicomputers"},
@@ -50,6 +48,14 @@ const timeline = [
   {year: "2025", tech: "LLMs & Quantum"}
 ];
 const techCloud = ["AWS","Azure","GCP","Linux","Docker","Kubernetes","Python","TypeScript"];
+const awards = [
+  { name: "Cloud Architect of the Year", org: "Cloud Weekly", year: "2024" },
+  { name: "DevOps Pioneer", org: "Stack Awards", year: "2023" }
+];
+const publications = [
+  { title: "Forbes Tech", url: "https://forbes.com/tech", logo: "https://upload.wikimedia.org/wikipedia/commons/6/63/Forbes_logo.svg" },
+  { title: "AWS Blog", url: "https://aws.amazon.com/blogs/", logo: "https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg" }
+];
 
 // Fetch Github Repos
 const fetchRepos = async () => {
@@ -69,10 +75,33 @@ const fetchRepos = async () => {
     }));
 };
 
+// Contact form state
+function useContactForm() {
+  const [status, setStatus] = useState("idle");
+  const [msg, setMsg] = useState("");
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setStatus("loading");
+    const fd = new FormData(e.target as HTMLFormElement);
+    try {
+      await fetch("https://formspree.io/f/xyyqvkdg", {
+        method: "POST",
+        body: fd,
+        headers: { Accept: "application/json" }
+      });
+      setStatus("sent"); setMsg("Thanks for reaching out!");
+    } catch {
+      setStatus("error"); setMsg("Error sending message.");
+    }
+  }
+  return { status, msg, handleSubmit };
+}
+
 export default function HomePage() {
   const [repos, setRepos] = useState([]);
   const [loadingRepos, setLoadingRepos] = useState(false);
   const [dark, setDark] = useState(false);
+  const contact = useContactForm();
 
   useEffect(() => {
     setLoadingRepos(true);
@@ -93,7 +122,7 @@ export default function HomePage() {
         ? "bg-gradient-to-tr from-zinc-950 via-zinc-900 to-zinc-900 text-white"
         : "bg-gradient-to-tr from-indigo-900 via-blue-900 to-violet-900 text-white"
     }`}>
-      {/* Animated Blob/Mesh Background Layer */}
+      {/* SVG blob/mesh */}
       <div className="absolute inset-0 -z-10 pointer-events-none">
         <svg width="100%" height="100%">
           <defs>
@@ -128,7 +157,7 @@ export default function HomePage() {
         </div>
       </nav>
 
-      {/* Hero + Gradient Ring */}
+      {/* Hero + gradient ring */}
       <div className="relative flex justify-center mb-8">
         <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
           <div className="rounded-full w-72 h-72 bg-gradient-to-tr from-violet-600 to-indigo-400 blur-3xl opacity-30 animate-pulse"></div>
@@ -155,8 +184,8 @@ export default function HomePage() {
         </motion.div>
       </div>
 
-      {/* Career Timeline Layer */}
-      <motion.section initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1 }} className="max-w-5xl mx-auto my-10">
+      {/* Timeline Section */}
+      <motion.section initial={{ opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1 }} className="max-w-5xl mx-auto my-10">
         <h2 className="text-3xl font-bold mb-6 text-violet-300 dark:text-blue-300 text-center">Decades of Tech Innovation</h2>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           {timeline.map((item) => (
@@ -168,7 +197,7 @@ export default function HomePage() {
         </div>
       </motion.section>
 
-      {/* Tech Stack Badge Cloud */}
+      {/* Tech Stack Badges */}
       <div className="flex flex-wrap gap-3 justify-center mb-8">
         {techCloud.map((t) => (
           <span key={t} className="rounded-full px-4 py-1 bg-gradient-to-r from-violet-700 via-indigo-600 to-violet-400 dark:from-zinc-700 dark:via-indigo-800 dark:to-blue-900 text-white shadow-lg font-semibold hover:scale-110 transition cursor-pointer">
@@ -178,7 +207,7 @@ export default function HomePage() {
       </div>
 
       {/* Certifications & Education Card Grid */}
-      <motion.section initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="max-w-6xl mx-auto my-10 grid md:grid-cols-2 gap-8">
+      <motion.section initial={{ opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="max-w-6xl mx-auto my-10 grid md:grid-cols-2 gap-8">
         <div className="p-6 rounded-xl bg-gradient-to-br from-indigo-800/30 via-blue-900/30 to-violet-800/30 dark:from-zinc-800/80 dark:via-zinc-900/80 dark:to-zinc-800/80 backdrop-blur-lg border border-white/20 dark:border-zinc-700 shadow-xl">
           <h2 className="text-2xl font-bold mb-3 text-indigo-200 dark:text-zinc-100">Certifications</h2>
           <ul>
@@ -194,8 +223,31 @@ export default function HomePage() {
         </div>
       </motion.section>
 
+      {/* Awards & Publications Section */}
+      <motion.section initial={{ opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="max-w-6xl mx-auto my-10 grid md:grid-cols-2 gap-8">
+        <div className="p-6 rounded-xl bg-gradient-to-br from-violet-700/60 to-indigo-800/30 dark:from-zinc-700 dark:to-zinc-900 border border-white/20 dark:border-zinc-700 shadow-xl">
+          <h2 className="text-2xl font-bold mb-3 text-indigo-200 dark:text-zinc-100">Awards</h2>
+          <ul>
+            {awards.map(a => (
+              <li key={a.name} className="mb-2">{a.name} • {a.org} ({a.year})</li>
+            ))}
+          </ul>
+        </div>
+        <div className="p-6 rounded-xl bg-gradient-to-br from-blue-900/30 to-violet-900/30 dark:from-zinc-700 dark:to-zinc-900 border border-white/20 dark:border-zinc-700 shadow-xl">
+          <h2 className="text-2xl font-bold mb-3 text-indigo-200 dark:text-zinc-100">Publications</h2>
+          <div className="flex gap-4 flex-wrap">
+            {publications.map(pub => (
+              <a key={pub.title} href={pub.url} target="_blank" rel="noreferrer" className="flex items-center gap-2 px-3 py-1 bg-white/10 rounded-lg dark:bg-zinc-800/60 shadow">
+                <img src={pub.logo} alt={pub.title + " logo"} className="w-6 h-6" />
+                <span>{pub.title}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </motion.section>
+
       {/* Skills Bar Grid */}
-      <motion.section initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="max-w-5xl mx-auto my-10">
+      <motion.section initial={{ opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="max-w-5xl mx-auto my-10">
         <h2 className="text-2xl font-bold mb-4 text-indigo-200 dark:text-zinc-100">Skills</h2>
         <div className="grid grid-cols-2 gap-x-6 gap-y-5">
           {skills.map(skill => (
@@ -210,7 +262,7 @@ export default function HomePage() {
       </motion.section>
 
       {/* Dynamic Project Gallery */}
-      <motion.section id="projects" initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="max-w-6xl mx-auto my-10">
+      <motion.section id="projects" initial={{ opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="max-w-6xl mx-auto my-10">
         <h2 className="text-2xl font-bold mb-4 text-indigo-200 dark:text-zinc-100">Featured Projects</h2>
         {loadingRepos ? (
           <div className="text-indigo-300 dark:text-zinc-400">Loading projects…</div>
@@ -233,59 +285,69 @@ export default function HomePage() {
         )}
       </motion.section>
 
-      {/* Testimonials Layer */}
-      <motion.section initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="max-w-5xl mx-auto my-10">
+      {/* Testimonials Carousel */}
+      <motion.section initial={{ opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="max-w-5xl mx-auto my-10">
         <h2 className="text-2xl font-bold mb-4 text-indigo-200 dark:text-zinc-100">Testimonials</h2>
-        <div className="grid gap-6 md:grid-cols-2">
-          {testimonials.map(test => (
-            <motion.div key={test.name} whileHover={{ scale: 1.02 }} className="bg-gradient-to-r from-indigo-900/30 to-violet-900/30 dark:from-zinc-800/70 dark:to-zinc-900/70 p-6 rounded-xl shadow-lg border border-white/20 dark:border-zinc-700 backdrop-blur">
-              <p className="italic">“{test.quote}”</p>
-              <div className="mt-2 font-semibold text-violet-200 dark:text-zinc-100">{test.name}</div>
-              <div className="text-xs text-gray-300 dark:text-zinc-400">{test.title}</div>
-            </motion.div>
-          ))}
-        </div>
+        <AnimatePresence>
+          <div className="grid gap-6 md:grid-cols-2">
+            {testimonials.map((test, idx) => (
+              <motion.div key={test.name} initial={{ opacity: 0, x: -36 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 50 }} transition={{ duration: 0.5, delay: idx * 0.2 }} className="bg-gradient-to-r from-indigo-900/30 to-violet-900/30 dark:from-zinc-800/70 dark:to-zinc-900/70 p-6 rounded-xl shadow-lg border border-white/20 dark:border-zinc-700 backdrop-blur">
+                <p className="italic">“{test.quote}”</p>
+                <div className="mt-2 font-semibold text-violet-200 dark:text-zinc-100">{test.name}</div>
+                <div className="text-xs text-gray-300 dark:text-zinc-400">{test.title}</div>
+              </motion.div>
+            ))}
+          </div>
+        </AnimatePresence>
       </motion.section>
 
-      {/* Blog Layer */}
-      <motion.section initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="max-w-5xl mx-auto my-10">
-        <h2 className="text-2xl font-bold mb-4 text-indigo-200 dark:text-zinc-100">Blog & Articles</h2>
+      {/* Blog Digest */}
+      <motion.section initial={{ opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="max-w-5xl mx-auto my-10">
+        <h2 className="text-2xl font-bold mb-4 text-indigo-200 dark:text-zinc-100">Latest Blog Posts</h2>
         <div className="grid gap-6 md:grid-cols-2">
           {blogs.map(blog => (
             <div key={blog.title} className="p-6 rounded-xl bg-gradient-to-r from-indigo-900/30 to-violet-900/30 dark:from-zinc-800/70 dark:to-zinc-900/70 shadow-lg border border-white/20 dark:border-zinc-700 backdrop-blur">
               <a href={blog.url} target="_blank" className="text-indigo-300 dark:text-blue-400 font-semibold hover:underline">{blog.title}</a>
+              <div className="text-xs text-indigo-200 dark:text-zinc-400 mt-2">{blog.date}</div>
             </div>
           ))}
         </div>
       </motion.section>
 
-      {/* Advanced Contact Card Layer */}
-      <motion.section initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} id="contact" className="max-w-3xl mx-auto my-10">
-        <h2 className="text-2xl font-bold mb-4 text-indigo-200 dark:text-zinc-100">Contact</h2>
+      {/* Advanced Contact Card and QR */}
+      <motion.section initial={{ opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} id="contact" className="max-w-3xl mx-auto my-10">
+        <h2 className="text-2xl font-bold mb-4 text-indigo-200 dark:text-zinc-100">Contact Me</h2>
         <div className="flex flex-col items-center p-8 mb-8 rounded-xl bg-gradient-to-br from-indigo-900/80 to-violet-800/80 dark:from-zinc-800/80 dark:to-zinc-900/80 shadow-xl border border-white/20 dark:border-zinc-700">
-          <p className="mb-2 text-violet-200 dark:text-blue-400">Scan to save contact</p>
+          <p className="mb-2 text-violet-200 dark:text-blue-400">Scan my QR to connect!</p>
           <img src="/your-qr-code.png" alt="Scan for contact info" className="w-24 h-24 mb-2 rounded-lg shadow-lg" />
           <a href="/resume.pdf" download className="mt-2 px-6 py-2 rounded-xl bg-gradient-to-tr from-violet-500 to-indigo-600 dark:from-zinc-700 dark:to-blue-700 text-white font-bold shadow hover:scale-105 transition">Download vCard</a>
         </div>
-        <form className="flex flex-col gap-3 p-6 rounded-xl bg-gradient-to-r from-indigo-900/30 to-violet-900/30 dark:from-zinc-800/70 dark:to-zinc-900/70 shadow-lg border border-white/20 dark:border-zinc-700 backdrop-blur-lg">
-          <input placeholder="Your Name" className="rounded-xl p-2 bg-white/50 dark:bg-zinc-600 text-black dark:text-zinc-200" />
-          <input placeholder="Your Email" className="rounded-xl p-2 bg-white/50 dark:bg-zinc-600 text-black dark:text-zinc-200" />
-          <textarea placeholder="Your Message" className="rounded-xl p-2 bg-white/50 dark:bg-zinc-600 text-black dark:text-zinc-200" rows={3} />
-          <button className="bg-gradient-to-r from-indigo-500 to-violet-500 dark:from-zinc-700 dark:to-violet-900 rounded-xl px-6 py-2 text-white font-semibold hover:from-indigo-800 hover:to-violet-800 transition shadow" disabled>
-            Send (Demo Only)
+        <form className="flex flex-col gap-3 p-6 rounded-xl bg-gradient-to-r from-indigo-900/30 to-violet-900/30 dark:from-zinc-800/70 dark:to-zinc-900/70 shadow-lg border border-white/20 dark:border-zinc-700 backdrop-blur-lg" onSubmit={contact.handleSubmit}>
+          <input name="name" required placeholder="Your Name" className="rounded-xl p-2 bg-white/50 dark:bg-zinc-600 text-black dark:text-zinc-200" />
+          <input type="email" name="email" required placeholder="Your Email" className="rounded-xl p-2 bg-white/50 dark:bg-zinc-600 text-black dark:text-zinc-200" />
+          <textarea name="message" required placeholder="Your Message" className="rounded-xl p-2 bg-white/50 dark:bg-zinc-600 text-black dark:text-zinc-200" rows={3} />
+          <button className="bg-gradient-to-r from-indigo-500 to-violet-500 dark:from-zinc-700 dark:to-violet-900 rounded-xl px-6 py-2 text-white font-semibold hover:from-indigo-800 hover:to-violet-800 transition shadow" type="submit" disabled={contact.status === "loading"}>
+            {contact.status === "loading" ? "Sending..." : "Send"}
           </button>
+          {contact.msg && (<div className="text-sm mt-2 text-blue-400 dark:text-zinc-300">{contact.msg}</div>)}
         </form>
         <p className="mt-2 text-indigo-300 dark:text-blue-400 text-xs">Or write to <a href="mailto:clementvsc.martin@gmail.com" className="underline">clementvsc.martin@gmail.com</a></p>
+        <div className="flex mt-4 gap-3 items-center justify-center">
+          <button onClick={() => navigator.clipboard.writeText("clementvsc.martin@gmail.com")} className="px-3 py-1 text-xs rounded bg-violet-700 text-white shadow">Copy Email</button>
+          <a href="https://www.linkedin.com/in/sahaya-clement/" target="_blank" className="px-3 py-1 text-xs rounded bg-indigo-700 text-white shadow">Connect LinkedIn</a>
+        </div>
       </motion.section>
 
-      {/* Floating "Back to Top" Button Layer */}
-      <button onClick={() => window.scrollTo({top: 0, behavior: "smooth"})}
+      {/* Floating “Back to Top” Button */}
+      <button
+        onClick={() => window.scrollTo({top: 0, behavior: "smooth"})}
         className="fixed right-8 bottom-8 z-50 bg-gradient-to-tr from-violet-700 to-indigo-800 text-white p-3 rounded-full shadow-lg backdrop-blur-lg border border-white/30 opacity-80 hover:scale-110 hover:opacity-100 transition"
-        aria-label="Back to top">↑</button>
+        aria-label="Back to top"
+      >↑</button>
 
       {/* Footer */}
       <footer className="mx-auto mt-12 mb-4 max-w-4xl text-center p-6 rounded-xl bg-gradient-to-r from-indigo-800/30 via-blue-900/30 to-violet-800/30 dark:from-zinc-800/70 dark:via-zinc-900/70 dark:to-zinc-900/70 backdrop-blur border border-white/20 dark:border-zinc-700 shadow text-sm text-indigo-300 dark:text-blue-400">
-        <span className="font-serif italic tracking-wide text-violet-400">A Century of Innovation.</span><br/>
+        <span className="font-serif italic tracking-wide text-violet-400 block">A Century of Innovation.</span><br/>
         &copy; {new Date().getFullYear()} Sahaya Clement Vincent Martin • Portfolio. Built with Next.js, Tailwind, Framer Motion.
       </footer>
     </div>

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Cloud/Tech video (proven working, Pexels tech ambient)
+// Cloud/Tech video (proven working, royalty-free)
 const bgVideo = "https://videos.pexels.com/video-files/4998344/4998344-hd_1920_1080_25fps.mp4";
 const logoLight = "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg";
 const logoDark = "https://cdn-icons-png.flaticon.com/512/3700/3700622.png";
@@ -113,7 +113,7 @@ export default function HomePage() {
         <video
           className="w-full h-full object-cover"
           src={bgVideo} autoPlay muted loop playsInline preload="auto"
-          style={{ opacity: 0.35, background: '#181D20' }}
+          style={{ opacity: 0.33, background: '#181D20' }}
         />
         <div className={`absolute inset-0 bg-gradient-to-br from-blue-900 via-zinc-900 to-zinc-950 opacity-90`} />
       </div>
@@ -183,7 +183,7 @@ export default function HomePage() {
           ))}
         </div>
 
-        {/* "Cascading, Motion" PROJECTS STACK */}
+        {/* Projects Carousel/Stack */}
         <section className="max-w-4xl mx-auto my-16">
           <h2 className="text-3xl text-center font-bold mb-8 text-violet-800 dark:text-blue-100">Projects Showcase</h2>
           {loadingRepos ? (
@@ -203,7 +203,7 @@ export default function HomePage() {
                         className="absolute top-12 left-1/2 -translate-x-1/2 z-10 w-96 pointer-events-none"
                         style={{filter: "blur(1.5px)"}}
                       >
-                        <ProjectCard project={repos[idx]} />
+                        <ProjectCard project={repos[idx]} active={false} />
                       </motion.div>
                     );
                   }
@@ -216,7 +216,7 @@ export default function HomePage() {
                         transition={{ type: 'spring', stiffness: 230, damping: 20, mass: 0.7, duration: 0.51 }}
                         className="relative z-30 rounded-2xl shadow-2xl"
                       >
-                        <ProjectCard project={repos[idx]} active />
+                        <ProjectCard project={repos[idx]} active={true} />
                       </motion.div>
                     );
                   }
@@ -230,7 +230,7 @@ export default function HomePage() {
                         className="absolute top-12 left-1/2 -translate-x-1/2 z-10 w-96 pointer-events-none"
                         style={{filter: "blur(1.5px)"}}
                       >
-                        <ProjectCard project={repos[idx]} />
+                        <ProjectCard project={repos[idx]} active={false} />
                       </motion.div>
                     );
                   }
@@ -248,8 +248,7 @@ export default function HomePage() {
             <div className="text-blue-700 dark:text-blue-200 text-center">No projects found!</div>
           )}
         </section>
-
-        {/* --Rest of your sections: timeline, skills (animated bars), testimonials, blog, contact, and footer as in previous working code. Each section should use bg-white/90 and dark:bg-zinc-900/90 as in the above blocks for 100% clarity. Want those full sections pasted? Just ask! -- */}
+        {/* -- You can add more interactive elements or animated sections here, following this clean pattern -- */}
       </div>
 
       {/* Floating Back to Top */}
@@ -267,24 +266,33 @@ export default function HomePage() {
   );
 }
 
-// Animated project card for the carousel
+// ProjectCard with interaction
 function ProjectCard({ project, active }) {
+  const [expanded, setExpanded] = useState(false);
   return (
-    <div className={`rounded-2xl border shadow-xl p-6 bg-white/95 dark:bg-zinc-900/90
-                      flex flex-col items-center text-center transition
-                      ${active ? "scale-105 border-violet-400 dark:border-blue-500 z-30" : "border-zinc-300 dark:border-zinc-700"}`}>
+    <motion.div
+      whileHover={{ scale: active ? 1.08 : 1 }}
+      onClick={() => active && setExpanded(v => !v)}
+      className={`rounded-2xl border shadow-xl p-6 bg-white/95 dark:bg-zinc-900/90
+        flex flex-col items-center text-center transition cursor-pointer
+        ${active ? "scale-105 border-violet-400 dark:border-blue-500 z-30" : "border-zinc-300 dark:border-zinc-700"}`}
+      style={{ minHeight: expanded ? 330 : 200, boxShadow: expanded && active ? '0 12px 60px #4f46e5cc' : undefined }}
+    >
       <h3 className="text-lg font-bold mb-2 text-violet-800 dark:text-blue-100">{project.name}</h3>
       <p className="text-sm mb-3 text-gray-800 dark:text-zinc-200">{project.description}</p>
-      <div className="mb-2 flex gap-2 text-xs text-blue-700 dark:text-blue-300">
-        {project.language && <span>{project.language}</span>}
-        <span>Last updated: {project.updated.slice(0, 10)}</span>
-      </div>
-      <div>
-        <a className="font-bold underline text-indigo-700 dark:text-blue-300 hover:text-violet-700 mr-3" href={project.url} target="_blank" rel="noopener">GitHub</a>
-        {project.homepage && (
-          <a className="font-bold underline text-green-700 dark:text-green-300 hover:text-green-900" href={project.homepage} target="_blank" rel="noopener">Live Demo</a>
-        )}
-      </div>
-    </div>
+      {expanded && (
+        <div className="border-t pt-3 my-2 w-full">
+          <div className="text-xs text-blue-700 dark:text-blue-300 mb-2">
+            {project.language && <span>{project.language}</span>}<br/>
+            <span>Last updated: {project.updated.slice(0, 10)}</span>
+          </div>
+          <a className="font-bold underline text-indigo-700 dark:text-blue-300 hover:text-violet-700 mr-3" href={project.url} target="_blank" rel="noopener">GitHub</a>
+          {project.homepage && (
+            <a className="font-bold underline text-green-700 dark:text-green-300 hover:text-green-900" href={project.homepage} target="_blank" rel="noopener">Live Demo</a>
+          )}
+        </div>
+      )}
+      {!expanded && active && <div className="text-xs text-indigo-900 dark:text-blue-400 mt-2">(Click card for more)</div>}
+    </motion.div>
   );
 }

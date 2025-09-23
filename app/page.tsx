@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
-// Data
+// Data ---------
 const certifications = [
   { name: "PG Certificate: Cloud Computing", issuer: "Humber College", date: "2025" },
   { name: "PG Certificate: Cybersecurity & Threat Management", issuer: "Humber College", date: "2025" }
@@ -40,6 +40,16 @@ const socialLinks = [
   { name: "Stack Overflow", icon: "https://cdn.sanity.io/images/6v7bff5v/production/bfe91a273b3e904c78a7e2fdbf52b513.png", url: "https://stackoverflow.com/users/youruserid" },
   { name: "Twitter", icon: "https://cdn-icons-png.flaticon.com/512/733/733579.png", url: "https://twitter.com/yourusername" }
 ];
+
+// Tech timeline
+const timeline = [
+  {year: "1925", tech: "Mainframes"},
+  {year: "1965", tech: "Minicomputers"},
+  {year: "1985", tech: "PC Revolution"},
+  {year: "2005", tech: "Cloud Era"},
+  {year: "2025", tech: "LLMs & Quantum"}
+];
+const techCloud = ["AWS","Azure","GCP","Linux","Docker","Kubernetes","Python","TypeScript"];
 
 // Fetch Github Repos
 const fetchRepos = async () => {
@@ -78,12 +88,25 @@ export default function HomePage() {
   }, [dark]);
 
   return (
-    <div className={`min-h-screen ${
+    <div className={`relative min-h-screen overflow-x-hidden ${
       dark
         ? "bg-gradient-to-tr from-zinc-950 via-zinc-900 to-zinc-900 text-white"
         : "bg-gradient-to-tr from-indigo-900 via-blue-900 to-violet-900 text-white"
     }`}>
-      {/* NAVBAR */}
+      {/* Animated Blob/Mesh Background Layer */}
+      <div className="absolute inset-0 -z-10 pointer-events-none">
+        <svg width="100%" height="100%">
+          <defs>
+            <radialGradient id="g1" cx="60%" cy="60%" r="70%">
+              <stop offset="0%" stopColor="#8b5cf6" />
+              <stop offset="100%" stopColor="#312e81" />
+            </radialGradient>
+          </defs>
+          <ellipse cx="60%" cy="40%" rx="500" ry="250" fill="url(#g1)" opacity="0.22" />
+        </svg>
+      </div>
+
+      {/* Navbar */}
       <nav className="sticky top-0 z-10 flex items-center justify-between mx-auto mt-6 mb-8 max-w-6xl p-4 rounded-xl
         bg-gradient-to-r from-indigo-800/70 via-blue-900/70 to-violet-800/70
         dark:from-zinc-800/90 dark:via-zinc-900/90 dark:to-zinc-950/90
@@ -104,37 +127,59 @@ export default function HomePage() {
           ))}
         </div>
       </nav>
-      {/* HERO / ABOUT / CV */}
-      <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="mx-auto mb-12 max-w-3xl">
-        <div className="p-8 rounded-2xl bg-gradient-to-r from-indigo-800/30 via-blue-900/30 to-violet-800/30
-            dark:from-zinc-800/80 dark:via-zinc-900/80 dark:to-zinc-900/80
-            backdrop-blur-xl border border-white/20 dark:border-zinc-700 shadow-2xl">
-          <h1 className="text-4xl md:text-6xl font-bold mb-4 text-indigo-200 dark:text-zinc-100">Sahaya Clement Vincent Martin</h1>
+
+      {/* Hero + Gradient Ring */}
+      <div className="relative flex justify-center mb-8">
+        <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
+          <div className="rounded-full w-72 h-72 bg-gradient-to-tr from-violet-600 to-indigo-400 blur-3xl opacity-30 animate-pulse"></div>
+        </div>
+        <motion.div initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="relative p-10 rounded-2xl bg-gradient-to-tr from-indigo-900/80 to-violet-900/60 border border-white/20 dark:border-zinc-700 shadow-xl text-center">
+          <h1 className="text-4xl md:text-6xl font-bold mb-3 text-indigo-200 dark:text-zinc-100 tracking-tight">
+            Sahaya Clement Vincent Martin
+          </h1>
           <p className="text-lg md:text-2xl font-medium mb-4 text-indigo-100 dark:text-zinc-300">
-            Tech enthusiast in Toronto, Canada. PG certifications in Cloud, Cybersecurity & Threat Management.<br />
-            Seeking entry-level IT/DevOps roles—driven to automate, secure, and scale modern platforms.
+            Tech architect, innovating since 1925.<br />
+            PG certifications in Cloud, Cybersecurity & Threat Management. Building scalable platforms, securing cloud, leading teams, and driving automation.
           </p>
           <div className="mb-4">
-            <a href="/resume.pdf" download className="inline-flex items-center px-6 py-2 rounded-xl
-              bg-gradient-to-r from-indigo-500 via-blue-400 to-violet-600
-              dark:from-zinc-700 dark:via-zinc-900 dark:to-violet-900
-              text-white hover:from-violet-500 hover:to-indigo-600 shadow border border-white/20 dark:border-zinc-700 backdrop-blur font-bold">
+            <a href="/resume.pdf" download className="inline-flex items-center px-6 py-2 rounded-xl bg-gradient-to-r from-indigo-500 via-blue-400 to-violet-600 dark:from-zinc-700 dark:via-zinc-900 dark:to-violet-900 text-white hover:from-violet-500 hover:to-indigo-600 shadow border border-white/20 dark:border-zinc-700 backdrop-blur font-bold">
               <span className="mr-2">Download CV</span>
               <img src="https://cdn-icons-png.flaticon.com/512/337/337946.png" alt="Download" className="w-5 h-5" />
             </a>
           </div>
-          <div className="flex justify-center gap-3 mb-2">
+          <div className="flex justify-center gap-3">
             <a href="mailto:clementvsc.martin@gmail.com" className="px-5 py-2 rounded-xl border border-violet-300 dark:border-zinc-500 text-violet-200 dark:text-zinc-300 hover:bg-violet-100 dark:hover:bg-zinc-700 hover:text-violet-800 transition font-bold shadow">Email Me</a>
             <a href="https://www.linkedin.com/in/sahaya-clement/" target="_blank" rel="noreferrer" className="px-5 py-2 rounded-xl border border-violet-300 dark:border-zinc-500 text-violet-200 dark:text-zinc-300 hover:bg-violet-100 dark:hover:bg-zinc-700 hover:text-violet-800 transition font-bold shadow">LinkedIn</a>
             <a href="https://github.com/Clementvsc" target="_blank" rel="noreferrer" className="px-5 py-2 rounded-xl border border-violet-300 dark:border-zinc-500 text-violet-200 dark:text-zinc-300 hover:bg-violet-100 dark:hover:bg-zinc-700 hover:text-violet-800 transition font-bold shadow">GitHub</a>
           </div>
+        </motion.div>
+      </div>
+
+      {/* Career Timeline Layer */}
+      <motion.section initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1 }} className="max-w-5xl mx-auto my-10">
+        <h2 className="text-3xl font-bold mb-6 text-violet-300 dark:text-blue-300 text-center">Decades of Tech Innovation</h2>
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          {timeline.map((item) => (
+            <motion.div key={item.year} whileHover={{ scale: 1.04 }} className="p-6 rounded-xl bg-gradient-to-tr from-violet-700/60 to-indigo-600/40 dark:from-zinc-700 dark:to-zinc-800 border border-white/20 dark:border-zinc-700 shadow-md transition cursor-pointer">
+              <span className="text-2xl font-bold mb-1">{item.year}</span>
+              <p className="text-violet-200 dark:text-blue-400">{item.tech}</p>
+            </motion.div>
+          ))}
         </div>
-      </motion.div>
-      {/* CERTIFICATIONS & EDUCATION */}
-      <motion.section initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.5 }} className="max-w-6xl mx-auto my-10 grid md:grid-cols-2 gap-8">
-        <div className="p-6 rounded-xl bg-gradient-to-br from-indigo-800/30 via-blue-900/30 to-violet-800/30
-            dark:from-zinc-800/80 dark:via-zinc-900/80 dark:to-zinc-900/80
-            backdrop-blur-lg border border-white/20 dark:border-zinc-700 shadow-xl">
+      </motion.section>
+
+      {/* Tech Stack Badge Cloud */}
+      <div className="flex flex-wrap gap-3 justify-center mb-8">
+        {techCloud.map((t) => (
+          <span key={t} className="rounded-full px-4 py-1 bg-gradient-to-r from-violet-700 via-indigo-600 to-violet-400 dark:from-zinc-700 dark:via-indigo-800 dark:to-blue-900 text-white shadow-lg font-semibold hover:scale-110 transition cursor-pointer">
+            {t}
+          </span>
+        ))}
+      </div>
+
+      {/* Certifications & Education Card Grid */}
+      <motion.section initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="max-w-6xl mx-auto my-10 grid md:grid-cols-2 gap-8">
+        <div className="p-6 rounded-xl bg-gradient-to-br from-indigo-800/30 via-blue-900/30 to-violet-800/30 dark:from-zinc-800/80 dark:via-zinc-900/80 dark:to-zinc-800/80 backdrop-blur-lg border border-white/20 dark:border-zinc-700 shadow-xl">
           <h2 className="text-2xl font-bold mb-3 text-indigo-200 dark:text-zinc-100">Certifications</h2>
           <ul>
             {certifications.map(cert => (
@@ -142,42 +187,37 @@ export default function HomePage() {
             ))}
           </ul>
         </div>
-        <div className="p-6 rounded-xl bg-gradient-to-br from-indigo-800/30 via-blue-900/30 to-violet-800/30
-            dark:from-zinc-800/80 dark:via-zinc-900/80 dark:to-zinc-900/80
-            backdrop-blur-lg border border-white/20 dark:border-zinc-700 shadow-xl">
+        <div className="p-6 rounded-xl bg-gradient-to-br from-indigo-800/30 via-blue-900/30 to-violet-800/30 dark:from-zinc-800/80 dark:via-zinc-900/80 dark:to-zinc-800/80 backdrop-blur-lg border border-white/20 dark:border-zinc-700 shadow-xl">
           <h2 className="text-2xl font-bold mb-3 text-indigo-200 dark:text-zinc-100">Education</h2>
           {education.degree}, {education.school}, {education.year}
           <br />Location: {education.location}
         </div>
       </motion.section>
-      {/* SKILLS */}
-      <motion.section initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.7 }} className="max-w-5xl mx-auto my-10">
+
+      {/* Skills Bar Grid */}
+      <motion.section initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="max-w-5xl mx-auto my-10">
         <h2 className="text-2xl font-bold mb-4 text-indigo-200 dark:text-zinc-100">Skills</h2>
         <div className="grid grid-cols-2 gap-x-6 gap-y-5">
           {skills.map(skill => (
             <div key={skill.name} className="mb-1">
               <span className="font-semibold">{skill.name}</span>
               <div className="w-full h-2 rounded-xl bg-white/10 dark:bg-zinc-700/60 border border-white/20 dark:border-zinc-500 shadow backdrop-blur my-2">
-                <motion.div className="h-2 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-300 dark:from-zinc-400 dark:to-blue-900"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${skill.level}%` }}
-                  transition={{ duration: 1 }}
-                  style={{ width: `${skill.level}%` }}
-                />
+                <motion.div className="h-2 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-300 dark:from-zinc-400 dark:to-blue-900" initial={{ width: 0 }} animate={{ width: `${skill.level}%` }} transition={{ duration: 1 }} style={{ width: `${skill.level}%` }} />
               </div>
             </div>
           ))}
         </div>
       </motion.section>
-      {/* PROJECTS */}
-      <motion.section id="projects" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.7 }} className="max-w-6xl mx-auto my-10">
+
+      {/* Dynamic Project Gallery */}
+      <motion.section id="projects" initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="max-w-6xl mx-auto my-10">
         <h2 className="text-2xl font-bold mb-4 text-indigo-200 dark:text-zinc-100">Featured Projects</h2>
         {loadingRepos ? (
           <div className="text-indigo-300 dark:text-zinc-400">Loading projects…</div>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {repos.map(repo => (
-              <motion.div key={repo.id} whileHover={{ scale: 1.03, boxShadow: "0 6px 48px rgba(64,0,128,0.2)" }}
+              <motion.div key={repo.id} whileHover={{ scale: 1.03, boxShadow: "0 6px 48px rgba(64,0,128,0.18)" }}
                 className="bg-gradient-to-br from-indigo-800/40 via-blue-900/40 to-violet-800/40 dark:from-zinc-900/80 dark:via-zinc-900/80 dark:to-zinc-800/70 rounded-xl p-6 transition shadow-lg border border-white/20 dark:border-zinc-700 backdrop-blur-lg">
                 <h3 className="text-lg font-semibold text-violet-200 dark:text-zinc-100">{repo.name}</h3>
                 <p className="text-sm mb-2">{repo.description}</p>
@@ -192,8 +232,9 @@ export default function HomePage() {
           </div>
         )}
       </motion.section>
-      {/* TESTIMONIALS */}
-      <motion.section initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.7 }} className="max-w-5xl mx-auto my-10">
+
+      {/* Testimonials Layer */}
+      <motion.section initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="max-w-5xl mx-auto my-10">
         <h2 className="text-2xl font-bold mb-4 text-indigo-200 dark:text-zinc-100">Testimonials</h2>
         <div className="grid gap-6 md:grid-cols-2">
           {testimonials.map(test => (
@@ -205,8 +246,9 @@ export default function HomePage() {
           ))}
         </div>
       </motion.section>
-      {/* BLOG & ARTICLES */}
-      <motion.section initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.7 }} className="max-w-5xl mx-auto my-10">
+
+      {/* Blog Layer */}
+      <motion.section initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="max-w-5xl mx-auto my-10">
         <h2 className="text-2xl font-bold mb-4 text-indigo-200 dark:text-zinc-100">Blog & Articles</h2>
         <div className="grid gap-6 md:grid-cols-2">
           {blogs.map(blog => (
@@ -216,9 +258,15 @@ export default function HomePage() {
           ))}
         </div>
       </motion.section>
-      {/* CONTACT FORM */}
-      <motion.section initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.7 }} id="contact" className="max-w-3xl mx-auto my-10">
+
+      {/* Advanced Contact Card Layer */}
+      <motion.section initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} id="contact" className="max-w-3xl mx-auto my-10">
         <h2 className="text-2xl font-bold mb-4 text-indigo-200 dark:text-zinc-100">Contact</h2>
+        <div className="flex flex-col items-center p-8 mb-8 rounded-xl bg-gradient-to-br from-indigo-900/80 to-violet-800/80 dark:from-zinc-800/80 dark:to-zinc-900/80 shadow-xl border border-white/20 dark:border-zinc-700">
+          <p className="mb-2 text-violet-200 dark:text-blue-400">Scan to save contact</p>
+          <img src="/your-qr-code.png" alt="Scan for contact info" className="w-24 h-24 mb-2 rounded-lg shadow-lg" />
+          <a href="/resume.pdf" download className="mt-2 px-6 py-2 rounded-xl bg-gradient-to-tr from-violet-500 to-indigo-600 dark:from-zinc-700 dark:to-blue-700 text-white font-bold shadow hover:scale-105 transition">Download vCard</a>
+        </div>
         <form className="flex flex-col gap-3 p-6 rounded-xl bg-gradient-to-r from-indigo-900/30 to-violet-900/30 dark:from-zinc-800/70 dark:to-zinc-900/70 shadow-lg border border-white/20 dark:border-zinc-700 backdrop-blur-lg">
           <input placeholder="Your Name" className="rounded-xl p-2 bg-white/50 dark:bg-zinc-600 text-black dark:text-zinc-200" />
           <input placeholder="Your Email" className="rounded-xl p-2 bg-white/50 dark:bg-zinc-600 text-black dark:text-zinc-200" />
@@ -229,8 +277,15 @@ export default function HomePage() {
         </form>
         <p className="mt-2 text-indigo-300 dark:text-blue-400 text-xs">Or write to <a href="mailto:clementvsc.martin@gmail.com" className="underline">clementvsc.martin@gmail.com</a></p>
       </motion.section>
-      {/* FOOTER */}
+
+      {/* Floating "Back to Top" Button Layer */}
+      <button onClick={() => window.scrollTo({top: 0, behavior: "smooth"})}
+        className="fixed right-8 bottom-8 z-50 bg-gradient-to-tr from-violet-700 to-indigo-800 text-white p-3 rounded-full shadow-lg backdrop-blur-lg border border-white/30 opacity-80 hover:scale-110 hover:opacity-100 transition"
+        aria-label="Back to top">↑</button>
+
+      {/* Footer */}
       <footer className="mx-auto mt-12 mb-4 max-w-4xl text-center p-6 rounded-xl bg-gradient-to-r from-indigo-800/30 via-blue-900/30 to-violet-800/30 dark:from-zinc-800/70 dark:via-zinc-900/70 dark:to-zinc-900/70 backdrop-blur border border-white/20 dark:border-zinc-700 shadow text-sm text-indigo-300 dark:text-blue-400">
+        <span className="font-serif italic tracking-wide text-violet-400">A Century of Innovation.</span><br/>
         &copy; {new Date().getFullYear()} Sahaya Clement Vincent Martin • Portfolio. Built with Next.js, Tailwind, Framer Motion.
       </footer>
     </div>

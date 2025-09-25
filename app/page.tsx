@@ -125,7 +125,6 @@ export default function Page() {
       : "radial-gradient(ellipse at 40% 50%, #dbeafe 78%, #fff0 100%)";
   }, [theme]);
   const filtered = filter ? projects.filter(p => p.type === filter) : projects;
-  const contact = useContactForm();
   const heroType = ["Cloud Engineer", "Security Specialist", "Fullstack Dev", "SIEM Enthusiast", "Open to New Opportunities"][testiIdx % 5];
 
   return (
